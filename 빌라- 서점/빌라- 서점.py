@@ -17,25 +17,25 @@ cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor(prepared=True)
 
 # 빌라 쿼리 실행
-villa_query = "SELECT id, sigungu, lat, lng FROM villa"
-cursor.execute(villa_query)
-villa = cursor.fetchall()
+officetel_query = "SELECT id, sigungu, lat, lng FROM villa"
+cursor.execute(officetel_query)
+officetel = cursor.fetchall()
 
 # 도서관 쿼리 실행
-library_query = "SELECT id, name, lat, lng FROM library"
-cursor.execute(library_query)
-library = cursor.fetchall()
+book_query = "SELECT id, name, lat, lng FROM bookstore"
+cursor.execute(book_query)
+book = cursor.fetchall()
 
 # 연결 종료
 # 결과 출력
-for a in villa:
+for a in officetel:
     home_location = (a[2], a[3])
     home_id = a[0]
     nearest_library_id = None
     min_distance = float('inf')
     
     # Find the nearest cinema
-    for c in library:
+    for c in book:
         library_location = (c[2], c[3])
         library_id = c[0]
         distance = geodesic(home_location, library_location).km
@@ -61,10 +61,10 @@ for a in villa:
     print(a[1],min_distance,home_id,score)
         
 
-    # score_query = f"UPDATE score SET library = %s WHERE id = {home_id} AND type='VILLA'"
+    score_query = f"UPDATE score SET bookstore = %s WHERE id = {home_id} AND type='villa'"
     
-    # cursor.execute(score_query, [score])
-    # cnx.commit()
+    cursor.execute(score_query, [score])
+    cnx.commit()
 
 
 
